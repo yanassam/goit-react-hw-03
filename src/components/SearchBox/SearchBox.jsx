@@ -1,10 +1,19 @@
 import s from "./SearchBox.module.css";
-const SearchBox = () => {
+const SearchBox = ({ setSearchContact }) => {
   return (
-    <form className={s.form}>
+    <div className={s.addContact}>
       <label htmlFor="findId">Find contacts by name</label>
-      <input type="text" name="find" id="findId" />
-    </form>
+      <input
+        className={s.find}
+        type="search"
+        name="find"
+        id="findId"
+        placeholder="Enter name..."
+        onChange={(e) => {
+          setSearchContact(e.target.value);
+        }}
+      />
+    </div>
   );
 };
 

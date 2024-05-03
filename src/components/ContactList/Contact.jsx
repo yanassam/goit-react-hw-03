@@ -1,24 +1,25 @@
 import s from "./Contact.module.css";
-import { DiAndroid } from "react-icons/di";
+
 import { IoCallSharp } from "react-icons/io5";
 import { IoAccessibility } from "react-icons/io5";
 
-const Contact = ({ contact }) => {
-  const handleDelete = (id) => {
-    console.log(id);
-  };
+const Contact = ({ contact, onDeleteContact }) => {
   return (
     <li className={s.form} key={contact.id}>
       <div className={s.contact}>
-        <IoAccessibility />
-        {contact.name}
-        <IoCallSharp />
-        {contact.number}
+        <div className={s.name}>
+          <IoAccessibility />
+          {contact.name}
+        </div>
+        <div className={s.number}>
+          <IoCallSharp />
+          {contact.number}
+        </div>
       </div>
       <div>
         <button
           className={s.buttonDel}
-          onClick={() => handleDelete(contact.id)}
+          onClick={() => onDeleteContact(contact.id)}
         >
           Delete
         </button>

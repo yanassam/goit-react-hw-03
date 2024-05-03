@@ -1,45 +1,61 @@
 import s from "./ContactForm.module.css";
 import { useId } from "react";
-// import { useState } from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 
-const ContactForm = ({ contacts, setContacts }) => {
-  const id = useId();
+import * as Yup from "yup";
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+const ContactForm = ({ handleAddContact }) => {
+  const nameId = useId();
+  const numberId = useId();
 
-    const name = event.target.elements.name.value;
-    console.log(name.value);
-    const number = event.target.elements.number.value;
-    const newContact = { id, name, number };
+  const handleSubmit = (values, actions) => {
+    handleAddContact(values);
 
-    setContacts([...contacts, newContact]);
-    event.target.reset();
+    actions.resetForm();
   };
 
-  console.log(contacts);
+  const initialValues = {
+    name: "",
+    number: "",
+  };
+
+  const FeedbackSchema = Yup.object().shape({
+    name: Yup.string()
+      .min(3, "Too Short!")
+      .max(50, "Too Long!")
+      .required("Required"),
+    number: Yup.string()
+      .min(3, "Too Short!")
+      .max(10, "Too Long!")
+      .required("Required"),
+  });
+
   return (
-    <form onSubmit={handleSubmit} className={s.form}>
-      <label htmlFor="nameId">{"Name"}</label>
-      <input
-        type="text"
-        name="name"
-        value={contacts.name}
-        id="nameId"
-        autoComplete="false"
-      />
-
-      <label htmlFor="numberId">{"Number"}</label>
-      <input
-        type="number"
-        name="number"
-        value={contacts.number}
-        id="numberId"
-        autoComplete="false"
-      />
-
-      <button onClick={() => {}}>Add contact</button>
-    </form>
+    <Formik
+      initialValues={initialValues}
+      onSubmit={handleSubmit}
+      validationSchema={FeedbackSchema}
+    >
+      <Form className={s.form}>
+        <div>
+          <label htmlFor={nameId}>{"Name*"}</label>
+          <Field type="text" name="name" id={nameId} autoComplete="false" />
+          <ErrorMessage name="name" component="span" className={s.error} />
+        </div>
+        <div>
+          <label htmlFor={numberId}>{"Number*"}</label>
+          <Field
+            type="phone"
+            name="number"
+            id={numberId}
+            autoComplete="false"
+            className={s.number}
+          />
+          <ErrorMessage name="number" component="span" className={s.error} />
+        </div>
+        <button type="submit">Add contact</button>
+      </Form>
+    </Formik>
   );
 };
 
